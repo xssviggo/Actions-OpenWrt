@@ -19,8 +19,8 @@ on:
         required: false
         default: 'false'
   schedule:
-    - cron: 30 3 * * 5
-#星期五下午17点30 改11点30
+    - cron: 0 4 * * 5
+#星期五下午17点30 改12点
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
