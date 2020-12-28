@@ -19,7 +19,7 @@ on:
         required: false
         default: 'false'
   schedule:
-    - cron: 0 11 * * 5
+    - cron: 0 11 1 * ?
 
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede
@@ -127,11 +127,12 @@ jobs:
       if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
       run: |
         cd openwrt/bin/targets/*/*
-        rm -rf packages
+        rm -rf packages openwrt-ramips-mt7620-phicomm_psg1218a-initramfs-kernel.bin config.buildinfo feeds.buildinfo openwrt-ramips-mt7620-phicomm_psg1218a.manifest sha256sums version.buildinfo
+
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "::set-output name=status::success"
 
-    - name: Upload firmware directory
+    - name: Upload firmware 
       uses: actions/upload-artifact@main
       if: steps.organize.outputs.status == 'success' && !cancelled()
       with:
@@ -186,7 +187,7 @@ jobs:
       uses: dev-drprasad/delete-older-releases@v0.1.0
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       with:
-        keep_latest: 6
+        keep_latest: 3
         delete_tags: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
