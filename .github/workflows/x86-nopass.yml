@@ -8,7 +8,7 @@
 # Description: Build OpenWrt using GitHub Actions
 #
 
-name: Build OpenWrt-k2
+name: Build OpenWrt-x86
 
 on:
   repository_dispatch:
@@ -19,21 +19,21 @@ on:
         required: false
         default: 'false'
   schedule:
-    - cron: 0 8 1 * ?
+    - cron:  0 8 1 * ?
   watch:
    types: [started]
 
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
-  FEEDS_CONF: feeds.conf.default
-  CONFIG_FILE: k2.config
+  FEEDS_CONF: feeds.conf.all
+  CONFIG_FILE: x86-nopass.config
   DIY_P1_SH: diy-part1.sh
-  DIY_P2_SH: diy-part2.sh
+  DIY_P2_SH: diy-part2-100.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
-  UPLOAD_COWTRANSFER: true
-  UPLOAD_WETRANSFER: true
+  UPLOAD_COWTRANSFER: false
+  UPLOAD_WETRANSFER: false
   UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
 
@@ -124,17 +124,20 @@ jobs:
         name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         path: openwrt/bin
 
-    - name: Organize files
+    - name: Organize files & Push Docker Image To Dockerhub
       id: organize
       if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
       run: |
         cd openwrt/bin/targets/*/*
-        rm -rf packages openwrt-ramips-mt7620-phicomm_psg1218a-initramfs-kernel.bin config.buildinfo feeds.buildinfo openwrt-ramips-mt7620-phicomm_psg1218a.manifest sha256sums version.buildinfo
-
+        rm -rf packages config.buildinfo feeds.buildinfo openwrt-x86-64-generic-kernel.bin openwrt-x86-64-generic.manifest sha256sums version.buildinfo
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "::set-output name=status::success"
+        docker import openwrt*.tar.gz ${{ secrets.DOCKER_USERNAME }}/openwrt:amd64
+        docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+        docker push ${{ secrets.DOCKER_USERNAME }}/openwrt:amd64
 
-    - name: Upload firmware 
+
+    - name: Upload firmware directory
       uses: actions/upload-artifact@main
       if: steps.organize.outputs.status == 'success' && !cancelled()
       with:
