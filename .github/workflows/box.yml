@@ -124,7 +124,7 @@ jobs:
         name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         path: openwrt/bin
 
-    - name: Organize files
+    - name: Organize files & Push Docker Image To Dockerhub
       id: organize
       if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
       run: |
