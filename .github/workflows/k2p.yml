@@ -18,15 +18,15 @@ on:
         description: 'SSH connection to Actions'
         required: false
         default: 'false'
-  schedule:
-    - cron: 0 10 1,10,20 * *
-#  watch:
-#    types: [started]
+#  schedule:
+#    - cron: 0 10 1,10,20 * *
+  watch:
+    types: [started]
    
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
-  FEEDS_CONF: feeds.conf.default
+  FEEDS_CONF: feeds.conf.all
   CONFIG_FILE: k2p.config
   DIY_P1_SH: diy-part1.sh
   DIY_P2_SH: diy-part2-100.sh
