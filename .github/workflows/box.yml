@@ -19,7 +19,7 @@ on:
         required: false
         default: 'false'
   schedule:
-    - cron: 0 10 1,10,20 * *
+    - cron: 0 9 1,10,20 * *
 #  watch:
 #    types: [started]
 
@@ -32,8 +32,8 @@ env:
   DIY_P2_SH: diy-part2-100.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
-  UPLOAD_COWTRANSFER: false
-  UPLOAD_WETRANSFER: false
+  UPLOAD_COWTRANSFER: true
+  UPLOAD_WETRANSFER: true
   UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
 
