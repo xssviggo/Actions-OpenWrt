@@ -8,7 +8,7 @@
 # Description: Build OpenWrt using GitHub Actions
 #
 
-name: Build OpenWrt-box
+name: Build OpenWrt-f-box
 
 on:
   repository_dispatch:
