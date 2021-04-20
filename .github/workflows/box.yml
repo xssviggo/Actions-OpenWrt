@@ -20,8 +20,8 @@ on:
         default: 'false'
 #  schedule:
 #    - cron: 0 8 1,10,20 * *
-  watch:
-    types: [started]
+#  watch:
+#    types: [started]
 
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede
@@ -126,26 +126,15 @@ jobs:
 
     - name: 打包固件
       run: |
-        mkdir /opt/openwrt
         cd openwrt
-        find -name "*default-rootfs*" | xargs -i cp -f {} /opt/openwrt
-        cd /opt
-        wget https://github.com/892947707/ActionsVM/releases/download/0.1/openwrt.zip
-        unzip openwrt.zip
-        mkdir /opt/imgs
-        cd /opt/imgs
-        wget https://github.com/892947707/ActionsVM/releases/download/0.1/Armbian_20.10_L1-Pro_buster_5.4.108-flippy-56+o.img.xz
-        xz -d Armbian_20.10_L1-Pro_buster_5.4.108-flippy-56+o.img.xz
-        cd /opt/openwrt
-        sudo chmod 777 /opt/openwrt/mk_rk3328_l1pro.sh
+        sudo mkdir /opt/kernel
+        find -name "*default-rootfs*" | xargs -i cp -f {} /opt/kernel
+        sudo git clone https://github.com/892947707/openwrt_packit /opt/kernel
+        cd /opt/kernel
+        sudo chmod 777 ./mk_rk3328_l1pro.sh
         sudo sh ./mk_rk3328_l1pro.sh
-        
-
-
-        cd /opt/openwrt/tmp
-        sudo rm -rf *.bin
-        cd /opt/openwrt
         tar -zcvf openwrt_out.tar.gz tmp
+
 
     - name: Organize files & Push Docker Image To Dockerhub
       id: organize
@@ -158,7 +147,7 @@ jobs:
         docker import openwrt*.tar.gz ${{ secrets.DOCKER_USERNAME }}/openwrt:arm64
         docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
         docker push ${{ secrets.DOCKER_USERNAME }}/openwrt:arm64
-        sudo mv /opt/openwrt/openwrt_out.tar.gz ./openwrt_out.tar.gz
+        sudo mv /opt/kernel/openwrt_out.tar.gz ./openwrt_out.tar.gz
 
     - name: Upload firmware directory
       uses: actions/upload-artifact@main
