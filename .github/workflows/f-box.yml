@@ -131,10 +131,8 @@ jobs:
         find -name "*default-rootfs*" | xargs -i cp -f {} /opt/kernel
         sudo chmod -R 777 /opt/kernel
         cd /opt/kernel
-        ls
         sudo bash /opt/kernel/mk_rk3328_l1pro.sh
         tar -zcvf openwrt_out.tar.gz tmp
-        ls
 
     - name: Organize files & Push Docker Image To Dockerhub
       id: organize
