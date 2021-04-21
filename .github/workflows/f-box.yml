@@ -129,9 +129,12 @@ jobs:
         cd openwrt
         sudo git clone https://github.com/892947707/openwrt_packit /opt/kernel
         find -name "*default-rootfs*" | xargs -i cp -f {} /opt/kernel
+        sudo chmod -R 777 /opt/kernel
         cd /opt/kernel
-        sudo sh ./mk_rk3328_l1pro.sh
+        ls
+        sudo bash /opt/kernel/mk_rk3328_l1pro.sh
         tar -zcvf openwrt_out.tar.gz tmp
+        ls
 
     - name: Organize files & Push Docker Image To Dockerhub
       id: organize
