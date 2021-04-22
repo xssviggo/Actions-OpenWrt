@@ -20,8 +20,8 @@ on:
         default: 'false'
 #  schedule:
 #    - cron: 0 8 1,10,20 * *
-  watch:
-    types: [started]
+#  watch:
+#    types: [started]
 
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede
@@ -133,7 +133,6 @@ jobs:
         cd /opt/kernel
         sudo bash /opt/kernel/mk_rk3328_l1pro.sh
         tar -zcvf openwrt_out.tar.gz tmp
-
 
     - name: Organize files & Push Docker Image To Dockerhub
       id: organize
